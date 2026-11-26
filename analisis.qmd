@@ -1,0 +1,172 @@
+---
+title: "Respuesta ecohidrológica simulada del río Liucura"
+subtitle: "Tres coberturas del suelo, un contraste de caudal y dos registros regionales de calidad de agua"
+author: "Josefina Ovando León"
+lang: es
+format:
+  html:
+    toc: true
+    toc-title: "En este informe"
+    code-fold: true
+    code-summary: "Ver código R"
+    fig-width: 8
+    fig-align: center
+execute:
+  message: false
+---
+
+```{r}
+#| label: preparar-informe
+#| include: false
+source("scripts/01_camels.R", encoding = "UTF-8")
+source("scripts/02_swat.R", encoding = "UTF-8")
+source("scripts/03_desempeno.R", encoding = "UTF-8")
+source("scripts/04_estacionalidad.R", encoding = "UTF-8")
+
+decimal <- function(x, digitos = 1L) {
+  formatC(x, format = "f", digits = digitos, decimal.mark = ",", big.mark = ".")
+}
+
+m_conaf <- filter(desempeno_coberturas, cobertura == "CONAF")
+bajos <- filter(diagnostico_conaf, rango == "Bajo")
+altos <- filter(diagnostico_conaf, rango == "Alto")
+
+conaf_lidera <- m_conaf$rmse == min(desempeno_coberturas$rmse) &&
+  m_conaf$kge == max(desempeno_coberturas$kge, na.rm = TRUE)
+seleccion_conaf <- if (isTRUE(conaf_lidera)) {
+  "CONAF presenta el menor RMSE y la mayor KGE de las tres corridas."
+} else {
+  "La tabla permite contrastar el RMSE y la KGE de CONAF con las otras corridas."
+}
+
+tema_informe <- theme_minimal(base_size = 13) +
+  theme(
+    text = element_text(colour = "#193944"),
+    legend.position = "top",
+    strip.text = element_text(face = "bold", hjust = 0),
+    panel.grid.minor = element_blank(),
+    panel.grid.major.x = element_blank(),
+    panel.spacing = grid::unit(0.9, "lines"),
+    plot.margin = margin(8, 12, 8, 6)
+  )
+```
+
+## Pregunta y enfoque
+
+**¿Cómo cambia el caudal simulado del río Liucura al usar el Catastro CONAF, MapBiomas 2024 o CLDynamic 2018 como insumo de cobertura del suelo en SWAT+?** Primero se contrastan las tres corridas con el caudal observado. Después se examina en qué rango de caudal se concentra el error de CONAF. El cierre presenta las concentraciones observadas de sedimentos en el Trancura y los valores de nitrato en Quelhue como contexto regional.
+
+Se trabajó con las salidas mensuales de SWAT+ entre **`r year(inicio)` y `r year(fin)`** y con la serie diaria CAMELS-CL de Río Liucura en Liucura (9416001). Un mes observado se considera válido cuando dispone de caudal en todos sus días. El cruce por fecha y la selección de meses presentes en las tres corridas dejan **`r n_distinct(pares$fecha)` de `r nrow(caudal_mensual)` meses** para la comparación. Se usa `cha001` como canal candidato. Su correspondencia con la estación está pendiente de verificar en la red de drenaje y mediante el área aportante.
+
+## Comparación de las tres coberturas
+
+La @fig-caudal muestra cuatro años para distinguir el ciclo y los meses con caudales altos. La @tbl-coberturas usa todos los meses comparables. **RMSE** mide cuánto se apartan las simulaciones en m³/s. **NSE** contrasta el error con la variabilidad observada. **PBIAS** mide el sesgo acumulado y es negativo cuando hay subestimación. La **KGE de Gupta et al. (2009)** combina la correlación (`r`), la razón de desviaciones estándar (`alfa`) y la razón de medias (`beta`).
+
+```{r}
+#| label: fig-caudal
+#| fig-height: 5.5
+#| fig-cap: "Caudal medio mensual observado y simulado entre 2010 y 2013. Los paneles tienen la misma escala. Los cortes indican meses excluidos del contraste. Fuentes: CAMELS-CL y SWAT+."
+#| fig-alt: "Tres paneles comparan las series de caudal observado y simulado para CONAF, MapBiomas y CLDynamic durante 2010–2013."
+serie_caudal |>
+  filter(between(fecha, as.Date("2010-01-01"), as.Date("2013-12-01"))) |>
+  ggplot(aes(fecha, caudal, colour = serie, linetype = serie)) +
+  geom_line(linewidth = 0.75, na.rm = TRUE) +
+  facet_wrap(vars(cobertura), ncol = 1) +
+  scale_colour_manual(NULL, values = c(Observado = "#193944", Simulado = "#A24F26")) +
+  scale_linetype_manual(NULL, values = c(Observado = "solid", Simulado = "longdash")) +
+  scale_x_date(date_breaks = "1 year", date_labels = "%Y",
+               expand = expansion(mult = c(0.01, 0.01))) +
+  labs(x = "Año", y = "Caudal medio mensual (m³/s)") +
+  tema_informe
+```
+
+```{r}
+#| label: tbl-coberturas
+#| tbl-cap: "Métricas de ajuste por cobertura para el conjunto común de meses."
+knitr::kable(
+  desempeno_coberturas, digits = 3,
+  col.names = c("Cobertura", "Meses", "RMSE (m³/s)", "NSE",
+                "PBIAS (%)", "KGE", "r", "Alfa", "Beta")
+)
+```
+
+`r seleccion_conaf` Su KGE es **`r decimal(m_conaf$kge, 3)`** y su PBIAS alcanza **`r decimal(m_conaf$pbias_pct)` %**. La razón de medias de **`r decimal(m_conaf$beta, 2)`** indica que el caudal medio simulado equivale aproximadamente al **`r decimal(100 * m_conaf$beta, 0)` %** del observado en los meses emparejados. Se adopta CONAF como cobertura de trabajo para examinar ese sesgo con mayor detalle.
+
+## Dónde se concentra el error de CONAF
+
+Los rangos se definen con los percentiles del **caudal mensual observado**. Se considera **bajo** hasta P25 (`r decimal(umbrales_conaf$p25_m3s, 2)` m³/s), **alto** desde P75 (`r decimal(umbrales_conaf$p75_m3s, 2)` m³/s) e **intermedio** entre ambos. Cada mes simulado se asigna al grupo de su observación. Esto permite contabilizar la subestimación de un mes alto dentro del rango alto.
+
+```{r}
+#| label: fig-rangos
+#| fig-height: 3.4
+#| fig-cap: "Mediana observada y simulada en cada rango. El segmento muestra la distancia entre ambas medianas. El error mediano de la tabla se calcula a partir de las diferencias de cada mes."
+#| fig-alt: "La mediana observada supera a la simulada en los rangos bajo, intermedio y alto. La separación en m³/s es mayor en el rango alto."
+medianas <- diagnostico_conaf |>
+  pivot_longer(c(mediana_obs, mediana_sim), names_to = "serie", values_to = "caudal") |>
+  mutate(serie = recode(serie, mediana_obs = "Observado", mediana_sim = "Simulado"))
+
+ggplot(medianas, aes(caudal, rango)) +
+  geom_segment(
+    data = diagnostico_conaf,
+    aes(x = mediana_sim, xend = mediana_obs, y = rango, yend = rango),
+    inherit.aes = FALSE, linewidth = 1.2, colour = "#ADC2C7"
+  ) +
+  geom_point(aes(colour = serie, shape = serie), size = 3.6) +
+  scale_colour_manual(NULL, values = c(Observado = "#193944", Simulado = "#A24F26")) +
+  scale_shape_manual(NULL, values = c(Observado = 16, Simulado = 17)) +
+  scale_x_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.07))) +
+  labs(x = "Caudal mensual mediano (m³/s)", y = "Rango observado") +
+  tema_informe +
+  theme(panel.grid.major.x = element_line(colour = "#E0E8EA"))
+```
+
+```{r}
+#| label: tbl-rangos
+#| tbl-cap: "Desempeño de CONAF por rango del caudal observado. Se puede consultar el detalle de NSE y de los componentes de la KGE en el CSV."
+diagnostico_conaf |>
+  select(rango, n_meses, mediana_obs, mediana_sim, error_mediano, rmse, pbias_pct, kge) |>
+  knitr::kable(
+    digits = c(0, 0, 1, 1, 1, 1, 1, 3),
+    col.names = c("Rango", "Meses", "Obs. (m³/s)", "Sim. (m³/s)", "Error mediano (m³/s)",
+                  "RMSE (m³/s)", "PBIAS (%)", "KGE")
+  )
+```
+
+En los meses de caudal **bajo**, el PBIAS es **`r decimal(bajos$pbias_pct)` %**. En los meses de caudal **alto**, el error mediano es **`r decimal(altos$error_mediano)` m³/s**. Para distinguir ambos efectos se muestran unidades absolutas y relativas. La KGE por rango ayuda a diagnosticar el ajuste dentro de cada tramo de la distribución. Se interpreta junto con la KGE global porque los grupos tienen menor amplitud de caudales que la serie completa.
+
+## Estacionalidad observada de sedimentos y nitrato
+
+La DGA midió sedimentos en el **río Trancura antes del Llafenco** y nitrato en el **río Pucón en Balseadero Quelhue**. Se agruparon los registros por mes calendario. Los dos métodos de sedimentos aparecen por separado, porque sus frecuencias y protocolos de muestreo difieren. Las barras muestran la dispersión de las observaciones y el tamaño del punto indica cuántos registros entraron al resumen.
+
+```{r}
+#| label: fig-estacional
+#| fig-height: 6.9
+#| fig-cap: "Sedimentos y nitrato observados, agrupados por mes calendario. El punto muestra la mediana y la barra cubre los percentiles 25 a 75. Cada panel tiene escala propia. Fuente: registros históricos de la DGA."
+#| fig-alt: "Tres paneles muestran la mediana mensual y el intervalo intercuartílico de sedimentos rutinarios, sedimentos integrados y nitrato. El tamaño del punto representa el número de registros."
+fig_estacional
+```
+
+```{r}
+#| label: cobertura-dga
+#| include: false
+max_rut <- estacional_dga |>
+  filter(panel == paneles[1]) |>
+  slice_max(mediana, n = 1, with_ties = FALSE)
+max_int <- estacional_dga |>
+  filter(panel == paneles[2]) |>
+  slice_max(mediana, n = 1, with_ties = FALSE)
+```
+
+La mayor mediana mensual de sedimentos aparece en **`r max_rut$mes`** en el muestreo rutinario (`r decimal(max_rut$mediana, 2)` mg/L) y en **`r max_int$mes`** en el integrado (`r decimal(max_int$mediana, 2)` mg/L). En Quelhue se incluyeron **`r sum(control_nitrato$incluidos)` de `r sum(control_nitrato$total)` registros de nitrato**. El control de calidad registra `r sum(control_nitrato$bajo_limite)` resultados bajo el límite reportado y `r sum(control_nitrato$dudosos)` con marca de duda. Estas observaciones quedaron fuera del resumen. Los meses con una sola observación tienen un intervalo reducido al punto. La exclusión de valores bajo el límite puede elevar la mediana de los meses con más observaciones censuradas.
+
+La unidad analítica del nitrato no viene en el archivo DGA, por eso se grafica el **valor reportado**. Ambos sitios representan otras áreas aportantes y sus registros dan contexto regional. El diagnóstico de desempeño de este trabajo se limita al caudal del Liucura.
+
+## Conclusión
+
+La comparación común permite elegir CONAF para las pruebas siguientes y localizar sus errores según el caudal observado. El contraste cuantifica las diferencias entre las corridas disponibles. Para atribuirlas a la cobertura del suelo hay que cotejar las configuraciones de las corridas y confirmar que el canal represente la misma cuenca aportante que la estación 9416001.
+
+## Fuentes
+
+- [CAMELS-CL, Centro de Ciencia del Clima y la Resiliencia](https://www.cr2.cl/camels-cl/). [Alvarez-Garreton et al. (2018)](https://doi.org/10.5194/hess-22-5817-2018).
+- [Banco Nacional de Aguas, Dirección General de Aguas](https://snia.mop.gob.cl/BNAConsultas/reportes). Reportes históricos de calidad de agua y sedimentos.
+- [SWAT+, salidas de canal](https://docs.swat.tamu.edu/62.0.1/output-reference/channel-sediment-nutrient/).
+- [Gupta et al. (2009), descomposición del error y KGE](https://doi.org/10.1016/j.jhydrol.2009.08.003).

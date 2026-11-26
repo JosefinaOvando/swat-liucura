@@ -1,0 +1,37 @@
+---
+title: "Datos y métodos"
+toc: true
+---
+
+## Insumos y unidades
+
+| Insumo | Selección | Variables usadas |
+|---|---|---|
+| CAMELS-CL / DGA | Río Liucura en Liucura (9416001), 1984–2019 | Fecha diaria y caudal observado (`q_obs`, m³/s). Se requiere cobertura diaria completa para calcular la media de un mes. |
+| SWAT+ | Canal `cha001` de CONAF, MapBiomas y CLDynamic | Año y mes, `flo_out` en m³/s, `sed_out` en t/mes y `no3_out` en kg N/mes. En este informe, el contraste con observaciones usa `flo_out`. |
+| DGA · sedimentos | Río Trancura antes del Llafenco (`09414001`) | Fecha y concentración en mg/L. Se distinguen muestreo rutinario e integrado. |
+| DGA · nitrato | Río Pucón en Balseadero Quelhue (`09418001-5`), parámetro Nitrato | Fecha, `VALOR` y marca `CALIDAD`. La unidad analítica no está especificada en el archivo. |
+
+Los tres reportes DGA se leen desde `datos/observados/`. El script admite los nombres descargados con o sin el sufijo `(2)`. Cada serie histórica DGA conserva su propia ventana de muestreo.
+
+## Controles y cálculo
+
+- Los scripts `01_camels.R` y `02_swat.R` comprueban fechas, claves y unidades antes de cruzar las series. Un mes es comparable si tiene caudal observado completo y una simulación válida en las tres coberturas.
+- `03_desempeno.R` estima RMSE, NSE, PBIAS y KGE (Gupta et al., 2009). El signo del PBIAS sigue la convención simulado menos observado. P25 y P75 se calculan con el caudal **observado** de los meses comparables. Los umbrales se aplican al diagnóstico de CONAF.
+- `04_estacionalidad.R` calcula, por mes calendario, número de registros, mediana, P25 y P75. Incluye nitrato marcado con `=` o sin marca. Conserva en una tabla de control los conteos de los registros bajo límite (`<`) y dudosos (`?`).
+
+## Descargar resultados
+
+| Tabla | Contenido |
+|---|---|
+| [Desempeño por cobertura](../output/desempeno_coberturas.csv) | Meses comunes, RMSE, NSE, PBIAS, KGE y sus componentes. |
+| [Diagnóstico de CONAF](../output/diagnostico_conaf.csv) | Medianas observadas y simuladas, error mediano y métricas por rango. |
+| [Umbrales de CONAF](../output/umbrales_conaf.csv) | P25 y P75 del caudal observado en m³/s. |
+| [Control de caudal mensual](../output/control_caudal_mensual.csv) y [meses excluidos](../output/meses_excluidos.csv) | Días válidos y motivo de exclusión. |
+| [Estacionalidad DGA](../output/estacional_dga.csv) y [control del nitrato](../output/control_nitrato_dga.csv) | Número de registros, mediana, percentiles y control de marcas por mes. |
+
+## Fuentes
+
+- [CAMELS-CL](https://www.cr2.cl/camels-cl/) y [Alvarez-Garreton et al. (2018)](https://doi.org/10.5194/hess-22-5817-2018).
+- [Banco Nacional de Aguas](https://snia.mop.gob.cl/BNAConsultas/reportes).
+- [Documentación de salidas de canal de SWAT+](https://docs.swat.tamu.edu/62.0.1/output-reference/channel-sediment-nutrient/).

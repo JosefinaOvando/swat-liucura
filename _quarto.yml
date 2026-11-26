@@ -1,0 +1,36 @@
+project:
+  type: website
+  output-dir: docs
+  execute-dir: project
+  render:
+    - index.qmd
+    - analisis.qmd
+    - informe/datos.qmd
+  resources:
+    - output/*.csv
+
+lang: es
+
+website:
+  title: "Repositorio final - Análisis en Río Licura"
+  site-url: "https://josefinaovando.github.io/swat-liucura/"
+  repo-url: "https://github.com/JosefinaOvando/swat-liucura"
+
+  navbar:
+    background: "#C7EAF7"
+    foreground: "#173F56"
+    left:
+      - href: index.qmd
+        text: Inicio
+      - href: analisis.qmd
+        text: Análisis
+      - href: informe/datos.qmd
+        text: Datos y métodos
+  page-footer:
+    left: "Josefina Ovando León · AGP3141"
+    right: "Pontificia Universidad Católica de Chile"
+
+format:
+  html:
+    theme: cosmo
+    css: estilos.css

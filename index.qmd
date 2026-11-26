@@ -1,0 +1,43 @@
+---
+title: "Tres coberturas del suelo, una cuenca"
+subtitle: "Caudales simulados por SWAT+ versus caudal observado" 
+author: "Josefina Ovando León"
+toc: false
+---
+
+![](imagenes/rio_liucura.jpg){.foto-rio fig-alt="Fotografía del río Liucura, Región de La Araucanía, Chile."}
+
+
+::: {.presentacion}
+## ¿Cómo cambia el caudal entre coberturas del suelo?
+
+Este proyecto compara el caudal simulado por SWAT+ utilizando
+tres fuentes de cobertura del suelo: Catastro CONAF,
+MapBiomas 2024 y CLDynamic 2018.
+
+El análisis evalúa el desempeño frente al caudal observado
+y profundiza en la simulación con CONAF para condiciones
+de caudales bajos, medios y altos.
+
+Finalmente, presenta el comportamiento estacional de los
+registros observados de sedimentos y nitrato de la DGA,
+como contexto regional.
+
+[Leer el análisis](analisis.qmd){.enlace-principal}
+:::
+
+## Datos y métodos
+
+Consulta el [inventario y diccionario de datos](informe/datos.qmd)
+para conocer los archivos utilizados, sus unidades y los controles
+aplicados. Allí también encontrarás las tablas de resultados
+disponibles para descargar.
+
+## Código y reproducibilidad
+
+Los scripts, los documentos Quarto y la configuración del proyecto
+están disponibles en el
+[repositorio de GitHub](https://github.com/JosefinaOvando/swat-liucura).
+
+Proyecto final de Visualización de Datos Medioambientales · AGP3141  
+Pontificia Universidad Católica de Chile.

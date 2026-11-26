@@ -1,0 +1,107 @@
+[
+  {
+    "objectID": "informe/datos.html",
+    "href": "informe/datos.html",
+    "title": "Datos y métodos",
+    "section": "",
+    "text": "Insumo\nSelección\nVariables usadas\n\n\n\n\nCAMELS-CL / DGA\nRío Liucura en Liucura (9416001), 1984–2019\nFecha diaria y caudal observado (q_obs, m³/s). Se requiere cobertura diaria completa para calcular la media de un mes.\n\n\nSWAT+\nCanal cha001 de CONAF, MapBiomas y CLDynamic\nAño y mes, flo_out en m³/s, sed_out en t/mes y no3_out en kg N/mes. En este informe, el contraste con observaciones usa flo_out.\n\n\nDGA · sedimentos\nRío Trancura antes del Llafenco (09414001)\nFecha y concentración en mg/L. Se distinguen muestreo rutinario e integrado.\n\n\nDGA · nitrato\nRío Pucón en Balseadero Quelhue (09418001-5), parámetro Nitrato\nFecha, VALOR y marca CALIDAD. La unidad analítica no está especificada en el archivo.\n\n\n\nLos tres reportes DGA se leen desde datos/observados/. El script admite los nombres descargados con o sin el sufijo (2). Cada serie histórica DGA conserva su propia ventana de muestreo."
+  },
+  {
+    "objectID": "informe/datos.html#insumos-y-unidades",
+    "href": "informe/datos.html#insumos-y-unidades",
+    "title": "Datos y métodos",
+    "section": "",
+    "text": "Insumo\nSelección\nVariables usadas\n\n\n\n\nCAMELS-CL / DGA\nRío Liucura en Liucura (9416001), 1984–2019\nFecha diaria y caudal observado (q_obs, m³/s). Se requiere cobertura diaria completa para calcular la media de un mes.\n\n\nSWAT+\nCanal cha001 de CONAF, MapBiomas y CLDynamic\nAño y mes, flo_out en m³/s, sed_out en t/mes y no3_out en kg N/mes. En este informe, el contraste con observaciones usa flo_out.\n\n\nDGA · sedimentos\nRío Trancura antes del Llafenco (09414001)\nFecha y concentración en mg/L. Se distinguen muestreo rutinario e integrado.\n\n\nDGA · nitrato\nRío Pucón en Balseadero Quelhue (09418001-5), parámetro Nitrato\nFecha, VALOR y marca CALIDAD. La unidad analítica no está especificada en el archivo.\n\n\n\nLos tres reportes DGA se leen desde datos/observados/. El script admite los nombres descargados con o sin el sufijo (2). Cada serie histórica DGA conserva su propia ventana de muestreo."
+  },
+  {
+    "objectID": "informe/datos.html#controles-y-cálculo",
+    "href": "informe/datos.html#controles-y-cálculo",
+    "title": "Datos y métodos",
+    "section": "Controles y cálculo",
+    "text": "Controles y cálculo\n\nLos scripts 01_camels.R y 02_swat.R comprueban fechas, claves y unidades antes de cruzar las series. Un mes es comparable si tiene caudal observado completo y una simulación válida en las tres coberturas.\n03_desempeno.R estima RMSE, NSE, PBIAS y KGE (Gupta et al., 2009). El signo del PBIAS sigue la convención simulado menos observado. P25 y P75 se calculan con el caudal observado de los meses comparables. Los umbrales se aplican al diagnóstico de CONAF.\n04_estacionalidad.R calcula, por mes calendario, número de registros, mediana, P25 y P75. Incluye nitrato marcado con = o sin marca. Conserva en una tabla de control los conteos de los registros bajo límite (&lt;) y dudosos (?)."
+  },
+  {
+    "objectID": "informe/datos.html#descargar-resultados",
+    "href": "informe/datos.html#descargar-resultados",
+    "title": "Datos y métodos",
+    "section": "Descargar resultados",
+    "text": "Descargar resultados\n\n\n\nTabla\nContenido\n\n\n\n\nDesempeño por cobertura\nMeses comunes, RMSE, NSE, PBIAS, KGE y sus componentes.\n\n\nDiagnóstico de CONAF\nMedianas observadas y simuladas, error mediano y métricas por rango.\n\n\nUmbrales de CONAF\nP25 y P75 del caudal observado en m³/s.\n\n\nControl de caudal mensual y meses excluidos\nDías válidos y motivo de exclusión.\n\n\nEstacionalidad DGA y control del nitrato\nNúmero de registros, mediana, percentiles y control de marcas por mes."
+  },
+  {
+    "objectID": "informe/datos.html#fuentes",
+    "href": "informe/datos.html#fuentes",
+    "title": "Datos y métodos",
+    "section": "Fuentes",
+    "text": "Fuentes\n\nCAMELS-CL y Alvarez-Garreton et al. (2018).\nBanco Nacional de Aguas.\nDocumentación de salidas de canal de SWAT+."
+  },
+  {
+    "objectID": "index.html#cómo-cambia-el-caudal-entre-coberturas-del-suelo",
+    "href": "index.html#cómo-cambia-el-caudal-entre-coberturas-del-suelo",
+    "title": "Tres coberturas del suelo, una cuenca",
+    "section": "¿Cómo cambia el caudal entre coberturas del suelo?",
+    "text": "¿Cómo cambia el caudal entre coberturas del suelo?\nEste proyecto compara el caudal simulado por SWAT+ utilizando tres fuentes de cobertura del suelo: Catastro CONAF, MapBiomas 2024 y CLDynamic 2018.\nEl análisis evalúa el desempeño frente al caudal observado y profundiza en la simulación con CONAF para condiciones de caudales bajos, medios y altos.\nFinalmente, presenta el comportamiento estacional de los registros observados de sedimentos y nitrato de la DGA, como contexto regional.\nLeer el análisis"
+  },
+  {
+    "objectID": "index.html#datos-y-métodos",
+    "href": "index.html#datos-y-métodos",
+    "title": "Tres coberturas del suelo, una cuenca",
+    "section": "Datos y métodos",
+    "text": "Datos y métodos\nConsulta el inventario y diccionario de datos para conocer los archivos utilizados, sus unidades y los controles aplicados. Allí también encontrarás las tablas de resultados disponibles para descargar."
+  },
+  {
+    "objectID": "index.html#código-y-reproducibilidad",
+    "href": "index.html#código-y-reproducibilidad",
+    "title": "Tres coberturas del suelo, una cuenca",
+    "section": "Código y reproducibilidad",
+    "text": "Código y reproducibilidad\nLos scripts, los documentos Quarto y la configuración del proyecto están disponibles en el repositorio de GitHub.\nProyecto final de Visualización de Datos Medioambientales · AGP3141\nPontificia Universidad Católica de Chile."
+  },
+  {
+    "objectID": "analisis.html",
+    "href": "analisis.html",
+    "title": "Respuesta ecohidrológica simulada del río Liucura",
+    "section": "",
+    "text": "¿Cómo cambia el caudal simulado del río Liucura al usar el Catastro CONAF, MapBiomas 2024 o CLDynamic 2018 como insumo de cobertura del suelo en SWAT+? Primero se contrastan las tres corridas con el caudal observado. Después se examina en qué rango de caudal se concentra el error de CONAF. El cierre presenta las concentraciones observadas de sedimentos en el Trancura y los valores de nitrato en Quelhue como contexto regional.\nSe trabajó con las salidas mensuales de SWAT+ entre 1984 y 2019 y con la serie diaria CAMELS-CL de Río Liucura en Liucura (9416001). Un mes observado se considera válido cuando dispone de caudal en todos sus días. El cruce por fecha y la selección de meses presentes en las tres corridas dejan 354 de 432 meses para la comparación. Se usa cha001 como canal candidato. Su correspondencia con la estación está pendiente de verificar en la red de drenaje y mediante el área aportante."
+  },
+  {
+    "objectID": "analisis.html#pregunta-y-enfoque",
+    "href": "analisis.html#pregunta-y-enfoque",
+    "title": "Respuesta ecohidrológica simulada del río Liucura",
+    "section": "",
+    "text": "¿Cómo cambia el caudal simulado del río Liucura al usar el Catastro CONAF, MapBiomas 2024 o CLDynamic 2018 como insumo de cobertura del suelo en SWAT+? Primero se contrastan las tres corridas con el caudal observado. Después se examina en qué rango de caudal se concentra el error de CONAF. El cierre presenta las concentraciones observadas de sedimentos en el Trancura y los valores de nitrato en Quelhue como contexto regional.\nSe trabajó con las salidas mensuales de SWAT+ entre 1984 y 2019 y con la serie diaria CAMELS-CL de Río Liucura en Liucura (9416001). Un mes observado se considera válido cuando dispone de caudal en todos sus días. El cruce por fecha y la selección de meses presentes en las tres corridas dejan 354 de 432 meses para la comparación. Se usa cha001 como canal candidato. Su correspondencia con la estación está pendiente de verificar en la red de drenaje y mediante el área aportante."
+  },
+  {
+    "objectID": "analisis.html#comparación-de-las-tres-coberturas",
+    "href": "analisis.html#comparación-de-las-tres-coberturas",
+    "title": "Respuesta ecohidrológica simulada del río Liucura",
+    "section": "Comparación de las tres coberturas",
+    "text": "Comparación de las tres coberturas\nLa Figura 1 muestra cuatro años para distinguir el ciclo y los meses con caudales altos. La Tabla 1 usa todos los meses comparables. RMSE mide cuánto se apartan las simulaciones en m³/s. NSE contrasta el error con la variabilidad observada. PBIAS mide el sesgo acumulado y es negativo cuando hay subestimación. La KGE de Gupta et al. (2009) combina la correlación (r), la razón de desviaciones estándar (alfa) y la razón de medias (beta).\n\n\nVer código R\nserie_caudal |&gt;\n  filter(between(fecha, as.Date(\"2010-01-01\"), as.Date(\"2013-12-01\"))) |&gt;\n  ggplot(aes(fecha, caudal, colour = serie, linetype = serie)) +\n  geom_line(linewidth = 0.75, na.rm = TRUE) +\n  facet_wrap(vars(cobertura), ncol = 1) +\n  scale_colour_manual(NULL, values = c(Observado = \"#193944\", Simulado = \"#A24F26\")) +\n  scale_linetype_manual(NULL, values = c(Observado = \"solid\", Simulado = \"longdash\")) +\n  scale_x_date(date_breaks = \"1 year\", date_labels = \"%Y\",\n               expand = expansion(mult = c(0.01, 0.01))) +\n  labs(x = \"Año\", y = \"Caudal medio mensual (m³/s)\") +\n  tema_informe\n\n\n\n\n\n\n\n\nFigura 1: Caudal medio mensual observado y simulado entre 2010 y 2013. Los paneles tienen la misma escala. Los cortes indican meses excluidos del contraste. Fuentes: CAMELS-CL y SWAT+.\n\n\n\n\n\n\n\nVer código R\nknitr::kable(\n  desempeno_coberturas, digits = 3,\n  col.names = c(\"Cobertura\", \"Meses\", \"RMSE (m³/s)\", \"NSE\",\n                \"PBIAS (%)\", \"KGE\", \"r\", \"Alfa\", \"Beta\")\n)\n\n\n\n\nTabla 1: Métricas de ajuste por cobertura para el conjunto común de meses.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nCobertura\nMeses\nRMSE (m³/s)\nNSE\nPBIAS (%)\nKGE\nr\nAlfa\nBeta\n\n\n\n\nCONAF\n354\n15.172\n0.414\n-35.547\n0.562\n0.824\n0.815\n0.645\n\n\nMapBiomas\n354\n16.477\n0.309\n-36.319\n0.546\n0.770\n0.854\n0.637\n\n\nCLDynamic\n354\n18.682\n0.112\n-38.950\n0.400\n0.657\n0.700\n0.611\n\n\n\n\n\n\n\n\nCONAF presenta el menor RMSE y la mayor KGE de las tres corridas. Su KGE es 0,562 y su PBIAS alcanza -35,5 %. La razón de medias de 0,64 indica que el caudal medio simulado equivale aproximadamente al 64 % del observado en los meses emparejados. Se adopta CONAF como cobertura de trabajo para examinar ese sesgo con mayor detalle."
+  },
+  {
+    "objectID": "analisis.html#dónde-se-concentra-el-error-de-conaf",
+    "href": "analisis.html#dónde-se-concentra-el-error-de-conaf",
+    "title": "Respuesta ecohidrológica simulada del río Liucura",
+    "section": "Dónde se concentra el error de CONAF",
+    "text": "Dónde se concentra el error de CONAF\nLos rangos se definen con los percentiles del caudal mensual observado. Se considera bajo hasta P25 (10,81 m³/s), alto desde P75 (40,39 m³/s) e intermedio entre ambos. Cada mes simulado se asigna al grupo de su observación. Esto permite contabilizar la subestimación de un mes alto dentro del rango alto.\n\n\nVer código R\nmedianas &lt;- diagnostico_conaf |&gt;\n  pivot_longer(c(mediana_obs, mediana_sim), names_to = \"serie\", values_to = \"caudal\") |&gt;\n  mutate(serie = recode(serie, mediana_obs = \"Observado\", mediana_sim = \"Simulado\"))\n\nggplot(medianas, aes(caudal, rango)) +\n  geom_segment(\n    data = diagnostico_conaf,\n    aes(x = mediana_sim, xend = mediana_obs, y = rango, yend = rango),\n    inherit.aes = FALSE, linewidth = 1.2, colour = \"#ADC2C7\"\n  ) +\n  geom_point(aes(colour = serie, shape = serie), size = 3.6) +\n  scale_colour_manual(NULL, values = c(Observado = \"#193944\", Simulado = \"#A24F26\")) +\n  scale_shape_manual(NULL, values = c(Observado = 16, Simulado = 17)) +\n  scale_x_continuous(limits = c(0, NA), expand = expansion(mult = c(0, 0.07))) +\n  labs(x = \"Caudal mensual mediano (m³/s)\", y = \"Rango observado\") +\n  tema_informe +\n  theme(panel.grid.major.x = element_line(colour = \"#E0E8EA\"))\n\n\n\n\n\n\n\n\nFigura 2: Mediana observada y simulada en cada rango. El segmento muestra la distancia entre ambas medianas. El error mediano de la tabla se calcula a partir de las diferencias de cada mes.\n\n\n\n\n\n\n\nVer código R\ndiagnostico_conaf |&gt;\n  select(rango, n_meses, mediana_obs, mediana_sim, error_mediano, rmse, pbias_pct, kge) |&gt;\n  knitr::kable(\n    digits = c(0, 0, 1, 1, 1, 1, 1, 3),\n    col.names = c(\"Rango\", \"Meses\", \"Obs. (m³/s)\", \"Sim. (m³/s)\", \"Error mediano (m³/s)\",\n                  \"RMSE (m³/s)\", \"PBIAS (%)\", \"KGE\")\n  )\n\n\n\n\nTabla 2: Desempeño de CONAF por rango del caudal observado. Se puede consultar el detalle de NSE y de los componentes de la KGE en el CSV.\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\nRango\nMeses\nObs. (m³/s)\nSim. (m³/s)\nError mediano (m³/s)\nRMSE (m³/s)\nPBIAS (%)\nKGE\n\n\n\n\nBajo\n89\n8.2\n2.3\n-5.5\n5.7\n-66.5\n0.125\n\n\nIntermedio\n176\n25.5\n14.3\n-8.2\n11.7\n-31.1\n0.399\n\n\nAlto\n89\n53.1\n36.1\n-17.6\n24.8\n-35.1\n0.220\n\n\n\n\n\n\n\n\nEn los meses de caudal bajo, el PBIAS es -66,5 %. En los meses de caudal alto, el error mediano es -17,6 m³/s. Para distinguir ambos efectos se muestran unidades absolutas y relativas. La KGE por rango ayuda a diagnosticar el ajuste dentro de cada tramo de la distribución. Se interpreta junto con la KGE global porque los grupos tienen menor amplitud de caudales que la serie completa."
+  },
+  {
+    "objectID": "analisis.html#estacionalidad-observada-de-sedimentos-y-nitrato",
+    "href": "analisis.html#estacionalidad-observada-de-sedimentos-y-nitrato",
+    "title": "Respuesta ecohidrológica simulada del río Liucura",
+    "section": "Estacionalidad observada de sedimentos y nitrato",
+    "text": "Estacionalidad observada de sedimentos y nitrato\nLa DGA midió sedimentos en el río Trancura antes del Llafenco y nitrato en el río Pucón en Balseadero Quelhue. Se agruparon los registros por mes calendario. Los dos métodos de sedimentos aparecen por separado, porque sus frecuencias y protocolos de muestreo difieren. Las barras muestran la dispersión de las observaciones y el tamaño del punto indica cuántos registros entraron al resumen.\n\n\nVer código R\nfig_estacional\n\n\n\n\n\n\n\n\nFigura 3: Sedimentos y nitrato observados, agrupados por mes calendario. El punto muestra la mediana y la barra cubre los percentiles 25 a 75. Cada panel tiene escala propia. Fuente: registros históricos de la DGA.\n\n\n\n\n\nLa mayor mediana mensual de sedimentos aparece en Mar en el muestreo rutinario (11,75 mg/L) y en Jun en el integrado (16,45 mg/L). En Quelhue se incluyeron 77 de 106 registros de nitrato. El control de calidad registra 28 resultados bajo el límite reportado y 1 con marca de duda. Estas observaciones quedaron fuera del resumen. Los meses con una sola observación tienen un intervalo reducido al punto. La exclusión de valores bajo el límite puede elevar la mediana de los meses con más observaciones censuradas.\nLa unidad analítica del nitrato no viene en el archivo DGA, por eso se grafica el valor reportado. Ambos sitios representan otras áreas aportantes y sus registros dan contexto regional. El diagnóstico de desempeño de este trabajo se limita al caudal del Liucura."
+  },
+  {
+    "objectID": "analisis.html#conclusión",
+    "href": "analisis.html#conclusión",
+    "title": "Respuesta ecohidrológica simulada del río Liucura",
+    "section": "Conclusión",
+    "text": "Conclusión\nLa comparación común permite elegir CONAF para las pruebas siguientes y localizar sus errores según el caudal observado. El contraste cuantifica las diferencias entre las corridas disponibles. Para atribuirlas a la cobertura del suelo hay que cotejar las configuraciones de las corridas y confirmar que el canal represente la misma cuenca aportante que la estación 9416001."
+  },
+  {
+    "objectID": "analisis.html#fuentes",
+    "href": "analisis.html#fuentes",
+    "title": "Respuesta ecohidrológica simulada del río Liucura",
+    "section": "Fuentes",
+    "text": "Fuentes\n\nCAMELS-CL, Centro de Ciencia del Clima y la Resiliencia. Alvarez-Garreton et al. (2018).\nBanco Nacional de Aguas, Dirección General de Aguas. Reportes históricos de calidad de agua y sedimentos.\nSWAT+, salidas de canal.\nGupta et al. (2009), descomposición del error y KGE."
+  }
+]
