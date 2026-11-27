@@ -35,8 +35,7 @@ nitrato observado en el río Pucón en Balseadero Quelhue.
 4. Ejecutar `quarto render --to html` en la terminal.
 5. Abrir `docs/index.html`.
 
-Los scripts se ejecutan automáticamente al generar el informe. La primera
-descarga de CAMELS-CL requiere internet si falta el CSV local.
+Los scripts se ejecutan automáticamente al generar el informe.
 
 
 ## Fuentes
